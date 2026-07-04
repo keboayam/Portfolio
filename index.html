@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>filbert. — Graphic & Motion Designer</title>
+
+<!--
+  ============================================================
+  FILBERT PORTFOLIO — single file build
+  ------------------------------------------------------------
+  HOW TO EDIT THE BASICS (no coding knowledge needed):
+  1. Your name/logo text        -> search for "filbert."
+  2. Hero headline               -> search "HERO TEXT"
+  3. Your photo on the homepage  -> search "HERO PHOTO"
+  4. Project cards + video/image -> search "PROJECT CARD" (copy/paste a whole
+                                     <article class="project-card"> block to add more)
+  5. About bio text               -> search "ABOUT BIO"
+  6. Expertise tags               -> search "EXPERTISE TAG"
+  7. Skills/software tags         -> search "SKILL TAG"
+  8. Timeline / experience        -> search "TIMELINE ITEM"
+  9. Contact links (email etc.)   -> search "CONTACT LINK"
+  10. Colors                      -> search ":root" (top of the CSS) and change
+                                     the hex codes there — everything updates.
+
+  INTERACTIVE HOVER EFFECTS:
+  All pill tags (.tag), the hero photo, project cards, and contact links already
+  have color-changing hover effects built in — no extra work needed.
+  ============================================================
+-->
+
+<!-- Fonts: Space Grotesk = bold display headlines, Inter = body text, JetBrains Mono = labels/tags -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+
+  /* ============================================================
+     TOKENS — change these to re-theme the entire site
+  ============================================================ */
+  :root{
+    --white:      #FFFFFF;
+    --ink:        #0A0A0A;   /* near-black for body text, softer than pure black */
+    --blue:       #0038FF;   /* Electric Blue — primary accent */
+    --orange:     #FF5500;   /* Vibrant Orange — secondary accent */
+    --grey:       #6E7079;   /* muted supporting text */
+    --line:       #E4E4E7;   /* hairline rule color */
+
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body:    'Inter', sans-serif;
+    --font-mono:    'JetBrains Mono', monospace;
+
+    --container: 1240px;
+    --gap: 24px;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html{ scroll-behavior:smooth; }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; }
+  }
+
+  body{
+    background:var(--white);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a{ color:inherit; text-decoration:none; }
+  ul{ list-style:none; }
+  img, video{ max-width:100%; display:block; }
+
+  .container{
+    max-width:var(--container);
+    margin:0 auto;
+    padding:0 32px;
+  }
+
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:13px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--grey);
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:8px; height:8px;
+    background:var(--orange);
+    display:inline-block;
+  }
+
+  .section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    padding-bottom:28px;
+    margin-bottom:56px;
+    border-bottom:2px solid var(--ink);
+  }
+  .section-head h2{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(32px, 4vw, 52px);
+    letter-spacing:-0.01em;
+  }
+
+  /* ============================================================
+     NAVIGATION
+  ============================================================ */
+  .navbar{
+    position:fixed;
+    top:0; left:0; right:0;
+    z-index:100;
+    background:rgba(255,255,255,0.85);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .navbar .container{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    height:76px;
+  }
+  .logo{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:22px;
+    letter-spacing:-0.01em;
+    color:var(--orange);
+  }
+  .logo .dot{ color:var(--blue); }
+
+  .nav-links{
+    display:flex;
+    gap:40px;
+    font-family:var(--font-mono);
+    font-size:14px;
+  }
+  .nav-links a{
+    position:relative;
+    padding:4px 0;
+  }
+  .nav-links a::after{
+    content:"";
+    position:absolute;
+    left:0; bottom:0;
+    width:0%; height:2px;
+    background:var(--blue);
+    transition:width .25s ease;
+  }
+  .nav-links a:hover::after,
+  .nav-links a:focus-visible::after{ width:100%; }
+
+  .nav-toggle{
+    display:none;
+    background:none;
+    border:2px solid var(--ink);
+    width:40px; height:40px;
+    font-family:var(--font-mono);
+    font-size:12px;
+    cursor:pointer;
+  }
+
+  /* ============================================================
+     HERO
+  ============================================================ */
+  .hero{
+    padding:180px 0 100px;
+    border-bottom:2px solid var(--ink);
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1fr auto;
+    align-items:end;
+    gap:32px;
+    margin-bottom:56px;
+  }
+  .hero-tag{
+    font-family:var(--font-mono);
+    font-size:14px;
+    color:var(--grey);
+    text-align:right;
+    max-width:220px;
+  }
+
+  /* HERO PHOTO — the photo of you sits beside the headline */
+  .hero-top{
+    display:grid;
+    grid-template-columns:1fr 260px;
+    gap:48px;
+    align-items:end;
+    margin-bottom:56px;
+  }
+  .hero-photo{
+    width:260px;
+    height:320px;
+    border:2px solid var(--ink);
+    border-radius:16px;
+    overflow:hidden;
+    position:relative;
+    background:var(--blue);
+    flex-shrink:0;
+    cursor:pointer;
+  }
+  .hero-photo img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    transition:transform .4s ease, filter .4s ease;
+  }
+  /* HOVER EFFECT: photo zooms in slightly and the tag color flips blue -> orange */
+  .hero-photo:hover img{
+    transform:scale(1.08);
+    filter:saturate(1.15);
+  }
+  .hero-photo .hero-photo-tag{
+    position:absolute;
+    left:14px;
+    bottom:14px;
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    color:var(--white);
+    background:var(--orange);
+    padding:5px 10px;
+    border-radius:100px;
+    transition:background .3s ease;
+  }
+  .hero-photo:hover .hero-photo-tag{ background:var(--blue); }
+  .hero h1{
+    /* HERO TEXT: edit the headline below */
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(52px, 9vw, 128px);
+    line-height:0.96;
+    letter-spacing:-0.02em;
+  }
+  .hero h1 .accent-blue{ color:var(--blue); }
+  .hero h1 .accent-orange{ color:var(--orange); }
+
+  .hero-sub p{
+    font-size:20px;
+    max-width:640px;
+    color:var(--ink);
+  }
+  /* TAG — used for skills/expertise pills. Hover fills the pill with color. */
+  .tag{
+    font-family:var(--font-mono);
+    font-size:13px;
+    padding:8px 16px;
+    border:1.5px solid var(--ink);
+    border-radius:100px;
+    cursor:default;
+    transition:background .2s ease, color .2s ease, border-color .2s ease, transform .2s ease;
+  }
+  .tag.filled{
+    background:var(--ink);
+    color:var(--white);
+  }
+  /* HOVER EFFECT: plain tags fill blue, already-filled tags flip to orange */
+  .tag:hover{
+    background:var(--blue);
+    border-color:var(--blue);
+    color:var(--white);
+    transform:translateY(-2px);
+  }
+  .tag.filled:hover{
+    background:var(--orange);
+    border-color:var(--orange);
+  }
+
+  /* ============================================================
+     PROJECTS
+  ============================================================ */
+  .projects{
+    padding:120px 0;
+    border-bottom:2px solid var(--ink);
+  }
+
+  .project-group{ margin-bottom:80px; }
+  .project-group:last-child{ margin-bottom:0; }
+
+  .group-label{
+    font-family:var(--font-mono);
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--blue);
+    margin-bottom:20px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+  }
+  .group-label::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--line);
+  }
+
+  .project-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:var(--gap);
+  }
+
+  /* PROJECT CARD — duplicate this whole <article> block to add a new project.
+     PROJECT MEDIA: inside .project-media, replace the placeholder <span> with either:
+       - a YouTube embed:  <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+       - your own image:   <img src="your-image.jpg" alt="Project name">
+     Both will automatically fill the landscape frame and crop nicely. */
+  .project-card{
+    border:2px solid var(--ink);
+    border-radius:16px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .project-card:hover{
+    transform:translateY(-6px);
+    box-shadow:8px 8px 0 var(--ink);
+  }
+  .project-media{
+    aspect-ratio:16/9;
+    background:var(--blue);
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
+  /* alternate media colors so the grid doesn't feel monotone (only visible on placeholders) */
+  .project-card:nth-child(3n+2) .project-media{ background:var(--orange); }
+  .project-card:nth-child(3n+3) .project-media{ background:var(--ink); }
+
+  .project-media span{
+    font-family:var(--font-mono);
+    font-size:13px;
+    color:rgba(255,255,255,0.85);
+    letter-spacing:0.05em;
+  }
+  .project-media::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+      linear-gradient(rgba(255,255,255,0.14) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.14) 1px, transparent 1px);
+    background-size:24px 24px;
+    pointer-events:none;
+  }
+  /* once you swap the placeholder <span> for a real <img> or <iframe>, these rules
+     make it fill the frame and gently zoom on hover */
+  .project-media img,
+  .project-media iframe{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    border:0;
+    display:block;
+    position:relative;
+    z-index:1;
+    transition:transform .4s ease;
+  }
+  .project-card:hover .project-media img,
+  .project-card:hover .project-media iframe{
+    transform:scale(1.05);
+  }
+
+  .project-body{
+    padding:24px;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .project-body h3{
+    font-family:var(--font-display);
+    font-size:20px;
+    font-weight:700;
+  }
+  .project-body p{
+    font-size:14px;
+    color:var(--grey);
+  }
+  .project-meta{
+    margin-top:auto;
+    padding-top:14px;
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--ink);
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .project-meta span{
+    padding:3px 10px;
+    border:1px solid var(--line);
+    border-radius:100px;
+  }
+
+  /* ============================================================
+     ABOUT
+  ============================================================ */
+  .about{
+    padding:120px 0;
+    border-bottom:2px solid var(--ink);
+  }
+  .about-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:80px;
+  }
+
+  .about-bio p{
+    /* ABOUT BIO: replace this text with your own introduction */
+    font-size:22px;
+    line-height:1.6;
+    margin-bottom:24px;
+  }
+  .about-bio p:first-child{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(26px, 3vw, 34px);
+    line-height:1.3;
+  }
+  .about-bio p .accent-blue{ color:var(--blue); }
+
+  .about-side h4{
+    font-family:var(--font-mono);
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--grey);
+    margin-bottom:16px;
+  }
+
+  .skills-block{ margin-bottom:56px; }
+  .skills-tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  /* SKILL TAG — copy a <span class="tag"> to add more software/skills */
+  .skills-tags .tag{ font-size:13px; }
+
+  .timeline{
+    border-left:2px solid var(--ink);
+    padding-left:24px;
+    display:flex;
+    flex-direction:column;
+    gap:28px;
+  }
+  /* TIMELINE ITEM — duplicate this block to add another role */
+  .timeline-item{
+    position:relative;
+  }
+  .timeline-item::before{
+    content:"";
+    position:absolute;
+    left:-30px;
+    top:4px;
+    width:12px; height:12px;
+    background:var(--orange);
+    border-radius:50%;
+  }
+  .timeline-item .years{
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--blue);
+    display:block;
+    margin-bottom:4px;
+  }
+  .timeline-item h5{
+    font-family:var(--font-display);
+    font-size:17px;
+    font-weight:700;
+  }
+  .timeline-item p{
+    font-size:14px;
+    color:var(--grey);
+  }
+
+  /* ============================================================
+     CONTACT / FOOTER
+  ============================================================ */
+  .contact{
+    padding:120px 0 60px;
+  }
+  .contact h2{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(40px, 7vw, 96px);
+    line-height:1;
+    letter-spacing:-0.02em;
+    margin-bottom:64px;
+  }
+  .contact h2 .accent-blue{ color:var(--blue); }
+
+  .contact-links{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    border-top:2px solid var(--ink);
+  }
+  /* CONTACT LINK — duplicate an <a class="contact-link"> to add more platforms */
+  .contact-link{
+    padding:28px 12px;
+    border-right:2px solid var(--ink);
+    border-bottom:2px solid var(--ink);
+    font-family:var(--font-mono);
+    font-size:14px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    transition:background .2s ease, color .2s ease;
+  }
+  .contact-link:last-child{ border-right:none; }
+  .contact-link:hover{
+    background:var(--ink);
+    color:var(--white);
+  }
+  .contact-link:hover .arrow{ color:var(--orange); }
+  .arrow{ font-size:18px; }
+
+  .footer-bottom{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding-top:28px;
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--grey);
+  }
+
+  /* ============================================================
+     RESPONSIVE
+  ============================================================ */
+  @media (max-width:900px){
+    .project-grid{ grid-template-columns:repeat(2, 1fr); }
+    .about-grid{ grid-template-columns:1fr; gap:56px; }
+    .contact-links{ grid-template-columns:repeat(2, 1fr); }
+    .hero-top{ grid-template-columns:1fr 200px; gap:28px; }
+    .hero-photo{ width:200px; height:250px; }
+  }
+
+  @media (max-width:640px){
+    .nav-links{ display:none; }
+    .nav-toggle{ display:block; }
+    .nav-links.open{
+      display:flex;
+      flex-direction:column;
+      position:absolute;
+      top:76px; left:0; right:0;
+      background:var(--white);
+      border-bottom:2px solid var(--ink);
+      padding:24px 32px;
+      gap:20px;
+    }
+    .hero{ padding:140px 0 70px; }
+    .hero-grid{ grid-template-columns:1fr; }
+    .hero-tag{ text-align:left; max-width:none; }
+    .hero-top{ grid-template-columns:1fr; }
+    .hero-top .hero-photo{ order:-1; width:160px; height:200px; margin-bottom:24px; }
+    .project-grid{ grid-template-columns:1fr; }
+    .contact-links{ grid-template-columns:1fr; }
+    .section-head{ flex-direction:column; align-items:flex-start; gap:12px; }
+  }
+
+</style>
+</head>
+<body>
+
+  <!-- ============ NAVIGATION ============ -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="#home" class="logo">filbert<span class="dot">.</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
+    </div>
+  </nav>
+
+  <!-- ============ HERO / HOME ============ -->
+  <section class="hero" id="home">
+    <div class="container">
+
+      <div class="hero-top">
+        <!-- HERO TEXT: edit the headline lines below -->
+        <h1>
+          <span class="accent-orange">GRAPHIC &amp;</span><br>
+          <span class="accent-blue">MOTION<br>DESIGNER.</span>
+        </h1>
+
+        <!-- HERO PHOTO: replace src="" below with the path/URL to your own photo -->
+        <div class="hero-photo">
+          <img src="YOUR-PHOTO.jpg" alt="Portrait of filbert">
+          <span class="hero-photo-tag">It's me</span>
+        </div>
+      </div>
+
+      <div class="hero-grid">
+        <div></div>
+        <p class="hero-tag">Based in Yogyakarta — <br>available worldwide, 2024/25</p>
+      </div>
+
+      <!-- HERO INTRO: keep this short — full bio + skills now live in the About section -->
+      <div class="hero-sub">
+        <p>Hi, I'm <strong>filbert</strong> — a graphic &amp; motion designer who builds brand identities and moving visuals that stay clean, sharp, and easy to remember.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ PROJECTS ============ -->
+  <section class="projects" id="projects">
+    <div class="container">
+      <div class="section-head">
+        <h2>Selected Work</h2>
+        <span class="eyebrow">2022 — Present</span>
+      </div>
+
+      <!-- Sub-section: Branding -->
+      <div class="project-group">
+        <div class="group-label">Branding &amp; Identity</div>
+        <div class="project-grid">
+
+          <!-- PROJECT CARD
+               To embed a YouTube video, replace the line below with:
+               <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen title="Studio Sundo Identity"></iframe>
+               To use your own image instead:
+               <img src="your-image.jpg" alt="Studio Sundo Identity">
+          -->
+          <article class="project-card">
+            <div class="project-media"><span>VIDEO / IMAGE</span></div>
+            <div class="project-body">
+              <h3>Studio Sundo Identity</h3>
+              <p>Full brand system for an independent coffee roastery — mark, packaging, and print collateral.</p>
+              <div class="project-meta"><span>Branding</span><span>Packaging</span></div>
+            </div>
+          </article>
+
+          <!-- PROJECT CARD -->
+          <article class="project-card">
+            <div class="project-media"><span>VIDEO / IMAGE</span></div>
+            <div class="project-body">
+              <h3>Arka Studio Logo</h3>
+              <p>Geometric monogram and guidelines for a design & development studio.</p>
+              <div class="project-meta"><span>Logo</span><span>Guidelines</span></div>
+            </div>
+          </article>
+
+          <!-- PROJECT CARD -->
+          <article class="project-card">
+            <div class="project-media"><span>VIDEO / IMAGE</span></div>
+            <div class="project-body">
+              <h3>Kanan Packaging Line</h3>
+              <p>Retail packaging suite exploring bold color-blocking on kraft stock.</p>
+              <div class="project-meta"><span>Packaging</span><span>Print</span></div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+
+      <!-- Sub-section: Motion -->
+      <div class="project-group">
+        <div class="group-label">Motion &amp; 3D</div>
+        <div class="project-grid">
+
+          <!-- PROJECT CARD -->
+          <article class="project-card">
+            <div class="project-media"><span>VIDEO / IMAGE</span></div>
+            <div class="project-body">
+              <h3>Loop Reel — Q1</h3>
+              <p>15-second logo animations and stings for social launch campaigns.</p>
+              <div class="project-meta"><span>Motion</span><span>Reel</span></div>
+            </div>
+          </article>
+
+          <!-- PROJECT CARD -->
+          <article class="project-card">
+            <div class="project-media"><span>VIDEO / IMAGE</span></div>
+            <div class="project-body">
+              <h3>Product Render Series</h3>
+              <p>3D product visuals for e-commerce, lit and rendered in Blender.</p>
+              <div class="project-meta"><span>3D</span><span>Render</span></div>
+            </div>
+          </article>
+
+          <!-- PROJECT CARD -->
+          <article class="project-card">
+            <div class="project-media"><span>VIDEO / IMAGE</span></div>
+            <div class="project-body">
+              <h3>Kinetic Type Study</h3>
+              <p>Experimental kinetic typography piece exploring rhythm and contrast.</p>
+              <div class="project-meta"><span>Motion</span><span>Type</span></div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+
+      <!-- Sub-section: Social & Editorial -->
+      <div class="project-group">
+        <div class="group-label">Social &amp; Editorial</div>
+        <div class="project-grid">
+
+          <!-- PROJECT CARD -->
+          <article class="project-card">
+            <div class="project-media"><span>VIDEO / IMAGE</span></div>
+            <div class="project-body">
+              <h3>Weekly Poster Series</h3>
+              <p>A running series of typographic posters for a music collective.</p>
+              <div class="project-meta"><span>Poster</span><span>Type</span></div>
+            </div>
+          </article>
+
+          <!-- PROJECT CARD -->
+          <article class="project-card">
+            <div class="project-media"><span>VIDEO / IMAGE</span></div>
+            <div class="project-body">
+              <h3>Editorial Layout Set</h3>
+              <p>Magazine spreads exploring modular grids and bold color pairing.</p>
+              <div class="project-meta"><span>Editorial</span><span>Layout</span></div>
+            </div>
+          </article>
+
+          <!-- PROJECT CARD -->
+          <article class="project-card">
+            <div class="project-media"><span>VIDEO / IMAGE</span></div>
+            <div class="project-body">
+              <h3>Content Templates</h3>
+              <p>Reusable social templates built for fast, on-brand publishing.</p>
+              <div class="project-meta"><span>Social</span><span>Templates</span></div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section class="about" id="about">
+    <div class="container">
+      <div class="section-head">
+        <h2>About</h2>
+        <span class="eyebrow">Who I Am</span>
+      </div>
+
+      <div class="about-grid">
+
+        <div class="about-bio">
+          <!-- ABOUT BIO: edit these paragraphs -->
+          <p>A graphic designer based in <span class="accent-blue">Yogyakarta</span>, working across branding, motion, and print.</p>
+          <p>My background started in a different field entirely, but design pulled me in early and never let go. I care about work that is both good-looking and genuinely functional — clean systems that hold up under real use, not just a nice first frame.</p>
+          <p>Outside of client work I keep a running practice of small type and motion studies, mostly as an excuse to keep learning new tools.</p>
+        </div>
+
+        <div class="about-side">
+
+          <div class="skills-block">
+            <h4>Expertise</h4>
+            <div class="skills-tags">
+              <!-- EXPERTISE TAG -->
+              <span class="tag filled">Branding</span>
+              <span class="tag">Logo</span>
+              <span class="tag">Social Media</span>
+              <span class="tag">Poster</span>
+              <span class="tag">Packaging</span>
+              <span class="tag">Illustration</span>
+              <span class="tag">3D &amp; Motion Graphic</span>
+            </div>
+          </div>
+
+          <div class="skills-block">
+            <h4>Skills &amp; Software</h4>
+            <div class="skills-tags">
+              <!-- SKILL TAG -->
+              <span class="tag">Illustrator</span>
+              <span class="tag">Photoshop</span>
+              <span class="tag">After Effects</span>
+              <span class="tag">InDesign</span>
+              <span class="tag">Figma</span>
+              <span class="tag">Blender</span>
+              <span class="tag">Creativity</span>
+              <span class="tag">Teamwork</span>
+              <span class="tag">Time Management</span>
+              <span class="tag">Communication</span>
+            </div>
+          </div>
+
+          <div class="timeline-block">
+            <h4>Experience</h4>
+            <div class="timeline">
+
+              <!-- TIMELINE ITEM -->
+              <div class="timeline-item">
+                <span class="years">2022 — Present</span>
+                <h5>Freelance Graphic Designer</h5>
+                <p>Logo, brand identity, social media, packaging.</p>
+              </div>
+
+              <!-- TIMELINE ITEM -->
+              <div class="timeline-item">
+                <span class="years">2022 — Present</span>
+                <h5>Seller, Watercolor &amp; Merch Templates</h5>
+                <p>Independent illustration shop on Etsy.</p>
+              </div>
+
+              <!-- TIMELINE ITEM -->
+              <div class="timeline-item">
+                <span class="years">2021 — 2022</span>
+                <h5>Junior Staff, Industrial Engineering Team</h5>
+                <p>Process documentation and reporting.</p>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT / FOOTER ============ -->
+  <footer class="contact" id="contact">
+    <div class="container">
+      <h2>Let's build <br><span class="accent-blue">something bold.</span></h2>
+
+      <div class="contact-links">
+        <!-- CONTACT LINK: replace href + label with your own -->
+        <a class="contact-link" href="mailto:hello@filbert.design">Email <span class="arrow">↗</span></a>
+        <a class="contact-link" href="https://behance.net/filbert" target="_blank" rel="noopener">Behance <span class="arrow">↗</span></a>
+        <a class="contact-link" href="https://linkedin.com/in/filbert" target="_blank" rel="noopener">LinkedIn <span class="arrow">↗</span></a>
+        <a class="contact-link" href="https://instagram.com/filbert" target="_blank" rel="noopener">Instagram <span class="arrow">↗</span></a>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2025 filbert. All rights reserved.</span>
+        <span>Graphic &amp; Motion Designer</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============ SCRIPT: mobile nav toggle ============ -->
+  <script>
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    navToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+    });
+
+    // close mobile menu after a link is tapped
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => navLinks.classList.remove('open'));
+    });
+  </script>
+
+</body>
+</html>
